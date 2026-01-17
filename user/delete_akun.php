@@ -32,7 +32,7 @@ try {
     }
     
 } catch (Exception $e) {
-\    mysqli_rollback($conn);
+    mysqli_rollback($conn);
     http_response_code(500);
     echo json_encode(['error' => 'Gagal menghapus akun: ' . $e->getMessage()]);
 }
