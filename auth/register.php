@@ -17,7 +17,6 @@ if (empty($username) || empty($email) || empty($password)) {
     echo json_encode(['error' => 'Data tidak boleh kosong']);
     die();
 } else {
-    // Hash password sebelum disimpan
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     
     $query = mysqli_query($conn, "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$hashedPassword')");

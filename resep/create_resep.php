@@ -22,7 +22,6 @@ if (empty($id_user) || empty($judul) || empty($langkah) || empty($kategori)) {
 mysqli_autocommit($conn, false);
 mysqli_begin_transaction($conn);
 
-// Simpan resep
 $stmt = mysqli_prepare($conn, "INSERT INTO resep (id_user, judul, langkah, catatan, kategori) VALUES (?, ?, ?, ?, ?)");
 mysqli_stmt_bind_param($stmt, "issss", $id_user, $judul, $langkah, $catatan, $kategori);
 $success = mysqli_stmt_execute($stmt);
@@ -36,7 +35,6 @@ if (!$success || !$id_resep) {
     exit;
 }
 
-// Simpan bahan
 foreach ($bahanList as $b) {
     $nama = $b['nama_bahan'] ?? '';
     $takaran = $b['takaran'] ?? '';

@@ -29,7 +29,6 @@ try {
     while ($row = $result->fetch_assoc()) {
         $id_resep = $row['id_resep'];
         
-        // --- TAMBAHKAN BAGIAN INI UNTUK AMBIL BAHAN ---
         $queryBahan = "SELECT nama_bahan, takaran FROM bahan WHERE id_resep = ?";
         $stmtBahan = $conn->prepare($queryBahan);
         $stmtBahan->bind_param("i", $id_resep);

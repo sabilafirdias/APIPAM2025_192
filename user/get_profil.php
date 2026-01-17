@@ -3,7 +3,6 @@ include_once "../konek.php";
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-// Ambil ID dari query string
 $id_user = $_GET['id_user'] ?? null;
 
 if (empty($id_user)) {
@@ -12,14 +11,12 @@ if (empty($id_user)) {
     exit;
 }
 
-// Validasi ID adalah angka
 if (!is_numeric($id_user)) {
     http_response_code(400);
     echo json_encode(['error' => 'ID pengguna tidak valid']);
     exit;
 }
 
-// Query database
 $stmt = mysqli_prepare($conn, "SELECT id_user, username, email FROM users WHERE id_user = ?");
 mysqli_stmt_bind_param($stmt, "i", $id_user);
 $success = mysqli_stmt_execute($stmt);

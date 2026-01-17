@@ -12,14 +12,12 @@ $email = $data['email'] ?? null;
 $old_password = $data['old_password'] ?? null;
 $new_password = $data['new_password'] ?? null;
 
-// Validasi input dasar
 if (empty($id_user) || empty($username) || empty($email)) {
     http_response_code(400);
     echo json_encode(['error' => 'Data wajib diisi']);
     exit;
 }
 
-// Cek apakah username/email sudah dipakai oleh user lain
 $stmt = mysqli_prepare($conn, "SELECT id_user FROM users WHERE (username = ? OR email = ?) AND id_user != ?");
 mysqli_stmt_bind_param($stmt, "ssi", $username, $email, $id_user);
 mysqli_stmt_execute($stmt);
@@ -39,9 +37,7 @@ if (mysqli_num_rows($result) > 0) {
     }
 }
 
-// Jika ingin ganti password
 if ($old_password !== null || $new_password !== null) {
-    // Ambil password lama dari database
     $stmt = mysqli_prepare($conn, "SELECT password FROM users WHERE id_user = ?");
     mysqli_stmt_bind_param($stmt, "i", $id_user);
     mysqli_stmt_execute($stmt);
@@ -68,11 +64,9 @@ if ($old_password !== null || $new_password !== null) {
     
     $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
     
-    // Update dengan password baru
     $stmt = mysqli_prepare($conn, "UPDATE users SET username = ?, email = ?, password = ? WHERE id_user = ?");
     mysqli_stmt_bind_param($stmt, "sssi", $username, $email, $hashed_password, $id_user);
 } else {
-    // Update tanpa ganti password
     $stmt = mysqli_prepare($conn, "UPDATE users SET username = ?, email = ? WHERE id_user = ?");
     mysqli_stmt_bind_param($stmt, "ssi", $username, $email, $id_user);
 }

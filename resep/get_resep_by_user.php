@@ -1,16 +1,13 @@
 <?php
-// Mencegah pesan error mentah merusak format JSON
 error_reporting(0);
 ini_set('display_errors', 0);
 
-// Path ke konek.php (berdasarkan struktur folder yang Anda kirim)
 include_once '../konek.php'; 
 
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET");
 
-// Pastikan variabel $conn sesuai dengan yang ada di konek.php
 if (!isset($conn)) {
     http_response_code(500);
     echo json_encode(array("message" => "Variabel koneksi database tidak ditemukan."));
@@ -21,7 +18,6 @@ if (isset($_GET['id_user'])) {
     $id_user = $_GET['id_user'];
     
     try {
-        // PERBAIKAN: Menggunakan tabel 'users' bukan 'user'
         $query = "SELECT r.*, u.username 
                   FROM resep r 
                   JOIN users u ON r.id_user = u.id_user 
@@ -50,7 +46,6 @@ if (isset($_GET['id_user'])) {
             );
         }
 
-        // Jika berhasil, kirim data (meskipun array kosong jika resep tidak ada)
         http_response_code(200);
         echo json_encode($resep_arr);
 

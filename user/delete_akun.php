@@ -11,25 +11,20 @@ if (empty($id_user)) {
     exit;
 }
 
-// Mulai transaksi
 mysqli_autocommit($conn, FALSE);
 
 try {
-    // Hapus resep terkait
     $stmt = mysqli_prepare($conn, "DELETE FROM resep WHERE id_user = ?");
     mysqli_stmt_bind_param($stmt, "i", $id_user);
     mysqli_stmt_execute($stmt);
     
-    // Hapus bahan terkait (jika ada foreign key)
     $stmt = mysqli_prepare($conn, "DELETE FROM bahan WHERE id_resep NOT IN (SELECT id_resep FROM resep)");
     mysqli_stmt_execute($stmt);
     
-    // Hapus user
     $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id_user = ?");
     mysqli_stmt_bind_param($stmt, "i", $id_user);
     
     if (mysqli_stmt_execute($stmt)) {
-        // Commit transaksi
         mysqli_commit($conn);
         echo json_encode(['message' => 'Akun berhasil dihapus']);
     } else {
@@ -37,8 +32,7 @@ try {
     }
     
 } catch (Exception $e) {
-    // Rollback transaksi
-    mysqli_rollback($conn);
+\    mysqli_rollback($conn);
     http_response_code(500);
     echo json_encode(['error' => 'Gagal menghapus akun: ' . $e->getMessage()]);
 }

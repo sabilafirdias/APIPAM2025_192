@@ -20,7 +20,6 @@ if (empty($id_resep) || empty($id_user) || empty($judul) || empty($langkah) || e
     exit;
 }
 
-// 1. Verifikasi kepemilikan
 $stmt = mysqli_prepare($conn, "SELECT id_user FROM resep WHERE id_resep = ?");
 mysqli_stmt_bind_param($stmt, "i", $id_resep);
 mysqli_stmt_execute($stmt);
@@ -39,11 +38,9 @@ if ((int)$row['id_user'] !== (int)$id_user) {
     exit;
 }
 
-// 2. Mulai Transaksi
 mysqli_begin_transaction($conn);
 
 try {
-    // Update resep utama
     $stmtUpdate = mysqli_prepare($conn, "UPDATE resep SET judul = ?, langkah = ?, catatan = ?, kategori = ? WHERE id_resep = ?");
     mysqli_stmt_bind_param($stmtUpdate, "ssssi", $judul, $langkah, $catatan, $kategori, $id_resep);
     
@@ -51,19 +48,17 @@ try {
         throw new Exception("Gagal update resep utama");
     }
 
-    // 3. Hapus bahan lama dengan Prepared Statement (Aman)
     $stmtDel = mysqli_prepare($conn, "DELETE FROM bahan WHERE id_resep = ?");
     mysqli_stmt_bind_param($stmtDel, "i", $id_resep);
     mysqli_stmt_execute($stmtDel);
 
-    // 4. Tambahkan bahan baru jika ada
     if (!empty($bahanList) && is_array($bahanList)) {
         $stmtIns = mysqli_prepare($conn, "INSERT INTO bahan (id_resep, nama_bahan, takaran) VALUES (?, ?, ?)");
         
         foreach ($bahanList as $b) {
             $nama = $b['nama_bahan'] ?? '';
             $takaran = $b['takaran'] ?? '';
-            if (!empty($nama)) { // Hanya masukkan jika nama bahan tidak kosong
+            if (!empty($nama)) {
                 mysqli_stmt_bind_param($stmtIns, "iss", $id_resep, $nama, $takaran);
                 mysqli_stmt_execute($stmtIns);
             }
