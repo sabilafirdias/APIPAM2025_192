@@ -3,6 +3,7 @@ include_once "../konek.php";
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
+// mengambil satu resep untuk detail
 $id_resep = $_GET['id_resep'] ?? null;
 
 if (empty($id_resep)) {

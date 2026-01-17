@@ -36,7 +36,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $row['bahan'] = $bahanList;
     $row['id_resep'] = (int)$row['id_resep'];
     $row['id_user'] = (int)$row['id_user'];
-    $row['is_bookmarked'] = (int)$row['is_bookmarked']; // Pastikan dikirim sebagai Int (0 atau 1)
+    $row['is_bookmarked'] = (int)$row['is_bookmarked'];
     $resepList[] = $row;
 }
 
